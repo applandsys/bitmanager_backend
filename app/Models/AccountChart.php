@@ -8,4 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class AccountChart extends Model
 {
     use HasFactory;
+    protected $fillable = ['account_name']; 
 }

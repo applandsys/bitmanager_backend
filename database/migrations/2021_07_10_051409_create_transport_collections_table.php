@@ -15,6 +15,13 @@ class CreateTransportCollectionsTable extends Migration
     {
         Schema::create('transport_collections', function (Blueprint $table) {
             $table->id();
+            $table->integer('transport_id');
+            $table->integer('amount');
+            $table->string('custom_date');
+            $table->string('vehicle_number')->nullable();
+            $table->string('driver_name')->nullable();;
+            $table->string('license_number')->nullable();;
+            $table->string('contact_number')->nullable();;
             $table->timestamps();
         });
     }

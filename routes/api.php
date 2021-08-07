@@ -7,6 +7,9 @@ use App\Http\Controllers\BitCollection;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Cooperative;
+use App\Http\Controllers\TransportContoller;
+use App\Http\Controllers\ExpenseController;
+use App\Http\Controllers\StatsController;
 //use App\Http\Controllers\CategoryBit;
 
 
@@ -55,5 +58,14 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/cooperative_withdraw_list', [Cooperative::class, 'withdraw_list']);
     Route::post('/cooperative_loan_list', [Cooperative::class, 'loan_list']);
     Route::post('/add_user', [UserController::class, 'add_user']);
+    Route::post('/add_transport', [TransportContoller::class, 'add_transport']);
+    Route::post('/transport', [TransportContoller::class, 'transport']);
+    Route::any('/transport_collection', [TransportContoller::class, 'addTransportCollection']);
+    Route::any('/transport_collection_detail', [TransportContoller::class, 'transport_collection_detail']);
+    Route::any('/TodayTransportCollection', [TransportContoller::class, 'TodayTransportCollection']);
+    Route::any('/add_expense_chart', [ExpenseController::class, 'addExpenseChart']);
+    Route::any('/expense_chart', [ExpenseController::class, 'expense_chart']);
+    Route::any('/add_expense', [ExpenseController::class, 'add_expense']);
+    Route::any('/totalStats', [StatsController::class, 'totalStats']);
     Route::post('/logout', [Bitmanage::class, 'logout']);
 });
