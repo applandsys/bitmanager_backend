@@ -8,5 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class ExpenseLog extends Model
 {
     use HasFactory;
-    protected $fillable = ['account_chart_id','amount'];
+    protected $fillable = ['account_chart_id','description','amount'];
 }

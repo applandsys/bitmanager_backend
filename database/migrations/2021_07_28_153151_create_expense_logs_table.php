@@ -16,6 +16,7 @@ class CreateExpenseLogsTable extends Migration
         Schema::create('expense_logs', function (Blueprint $table) {
             $table->id();
             $table->integer('account_chart_id');
+            $table->string('description');
             $table->string('amount');
             $table->timestamps();
         });

@@ -3,19 +3,21 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\AccountChart;
-use App\Models\ExpenseLog;
+use App\Models\Bank;
+use App\Models\BankDeposit;
+use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
-class ExpenseController extends Controller
+
+class BankController extends Controller
 {
-
-
-    public function expense_chart(){
-        return AccountChart::all();
+    public function bank_list(){
+        return Bank::all();
     }
 
-    public function addExpenseChart(Request $request)
+
+
+    public function add_bank(Request $request)
     {
     
         $now = Carbon::now()->toDayDateTimeString();
@@ -24,8 +26,52 @@ class ExpenseController extends Controller
 		{
 			$data = $request->input();
 
-            $account_chart =	AccountChart::create([
-                'account_name' => $data['account_name']
+            $account_chart =	Bank::create([
+                'bank_name' => $data['bank_name'],
+                'bank_branch' => $data['bank_branch'],
+                'account_number' => $data['account_number']
+            ]);
+    
+    
+            $response = [
+                'title' => "Thanks",
+                'message' => "Created Successfully",
+                'status' =>'success'
+            ];
+    
+
+        }else{
+            $response = [
+                'title' => "Sorry",
+                'message' => "Unauthorized",
+                'status' =>'unsuccess'
+            ];
+    
+        }    
+
+        
+        return response($response, 201);
+
+    }
+
+    
+    public function bank_deposit(Request $request)
+    {
+    
+        $now = Carbon::now()->toDayDateTimeString();
+
+        if ($request->method()=="POST")
+		{
+			$data = $request->input();
+
+            $user_id = Auth::user()->id;
+
+            $account_chart =	BankDeposit::create([
+                'bank_id' => $data['bank_id'],
+                'amount' => $data['amount'],
+                'deposit_slip_number' => $data['deposit_slip_number'],
+                'deposit_date' => $data['deposit_date'],
+                'user_id' => $user_id 
             ]);
     
     
@@ -51,46 +97,9 @@ class ExpenseController extends Controller
     }
 
 
-    
-
-    public function add_expense(Request $request)
-    {
-    
-        $now = Carbon::now()->toDayDateTimeString();
-
-        if ($request->method()=="POST")
-		{
-			$data = $request->input();
-
-            $account_chart =	ExpenseLog::create([
-                'account_chart_id' => $data['account_chart_id'],
-                'description' => $data['description'],
-                'amount' => $data['amount']
-            ]);
-    
-    
-            $response = [
-                'title' => "Thanks",
-                'message' => "Expense Successfully",
-                'status' =>'success'
-            ];
-    
-
-        }else{
-            $response = [
-                'title' => "Sorry",
-                'message' => "Unauthorized",
-                'status' =>'unsuccess'
-            ];
-    
-        }    
-
-        
-        return response($response, 201);
-
+    public function deposit_list(){
+        return BankDeposit::with('bank')->get();
     }
-
-
 
 
 

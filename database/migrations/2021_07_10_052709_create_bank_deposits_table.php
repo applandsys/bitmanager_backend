@@ -17,7 +17,8 @@ class CreateBankDepositsTable extends Migration
             $table->id();
             $table->integer('bank_id');
             $table->integer('amount');
-            $table->string('depositor');
+            $table->string('deposit_slip_number');
+            $table->string('deposit_date');
             $table->integer('user_id');
             $table->timestamps();
         });
