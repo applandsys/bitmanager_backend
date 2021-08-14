@@ -91,6 +91,9 @@ class ExpenseController extends Controller
     }
 
 
+    public function expense_list(){
+       return ExpenseLog::whereDate('created_at', Carbon::today())->with('accountchart')->get();
+    }
 
 
 

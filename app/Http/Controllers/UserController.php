@@ -17,6 +17,11 @@ class UserController extends Controller
     }
 
 
+    public function user_list(){
+        return $user = User::get();
+    }
+
+
     public function update_user(Request $request){
 
         if ($request->method()=="POST")

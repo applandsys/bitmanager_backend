@@ -59,6 +59,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/cooperative_withdraw_list', [Cooperative::class, 'withdraw_list']);
     Route::post('/cooperative_loan_list', [Cooperative::class, 'loan_list']);
     Route::post('/add_user', [UserController::class, 'add_user']);
+    Route::post('/user_list', [UserController::class, 'user_list']);
     Route::post('/update_user', [UserController::class, 'update_user']);
     Route::post('/add_transport', [TransportContoller::class, 'add_transport']);
     Route::post('/transport', [TransportContoller::class, 'transport']);
@@ -68,6 +69,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::any('/add_expense_chart', [ExpenseController::class, 'addExpenseChart']);
     Route::any('/expense_chart', [ExpenseController::class, 'expense_chart']);
     Route::any('/add_expense', [ExpenseController::class, 'add_expense']);
+    Route::any('/expense_list', [ExpenseController::class, 'expense_list']);
     Route::any('/bank_list', [BankController::class, 'bank_list']);
     Route::any('/add_bank', [BankController::class, 'add_bank']);
     Route::any('/bank_deposit', [BankController::class, 'bank_deposit']);
