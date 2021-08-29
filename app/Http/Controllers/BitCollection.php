@@ -53,9 +53,22 @@ class BitCollection extends Controller
     
     public function collection_list_lastdate()
     {
-        return BitCollect::with('bit')->get();
+        return BitCollect::with('bit')->whereDay('created_at', now()->day)->get();
     }
 
+
+    public function bit_collection_daterange(Request $request)
+    {
+        if ($request->method()=="POST")
+		{
+	
+            $data = $request->input();
+
+            $date_start = $data['date_start'];
+            $date_end   = $data['date_end'];
+            return BitCollect::with('bit')->whereBetween('created_at',[$date_start,$date_end])->get();
+        }
+    }
 
 
 

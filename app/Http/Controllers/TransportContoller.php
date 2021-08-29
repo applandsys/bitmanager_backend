@@ -59,7 +59,8 @@ class TransportContoller extends Controller
 			$data = $request->input();
 
             $bit_collection =	Transport::create([
-                'name' =>  $data['name']
+                'name' =>  $data['name'],
+                'rent' =>  $data['rent']
             ]);
     
     
@@ -99,5 +100,45 @@ class TransportContoller extends Controller
     public function TodayTransportCollection(){
         return TransportCollection::whereDate('created_at', Carbon::today())->get();
     }
+
+
+    public function transport_collection_daterange(Request $request)
+    {
+        if ($request->method()=="POST")
+		{
+	
+            $data = $request->input();
+
+            $date_start = $data['date_start'];
+            $date_end   = $data['date_end'];
+			
+			$date_from = Carbon::parse( $date_start)->startOfDay();
+			$date_to = Carbon::parse($date_end)->endOfDay();
+			
+			if( $date_start ==     $date_end){
+				return TransportCollection::where('custom_date',$date_start)->get();
+			}else{
+				return TransportCollection::whereDate('created_at', '>=', $date_from)
+											->whereDate('created_at', '<=', $date_to)->get();
+			}
+
+        }
+    }
+	
+	//https://stackoverflow.com/questions/44158949/laravels-wherebetween-not-including-date-from/44159457
+	
+	
+	public function transport_detail_by_id(Request $request){
+		if ($request->method()=="POST")
+		{
+	
+            $data = $request->input();
+
+            $transport_id = $data['transport_id'];
+         
+            return Transport::where('id', $transport_id)->get();
+
+        }
+	}
 
 }

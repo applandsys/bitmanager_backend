@@ -80,20 +80,35 @@ class Bitmanage extends Controller
 		{
 
             $input = $request->all();
+			$category_name =  $input['category_name'];
+			
+			$category_count = BitCategory::where('category_name',$category_name)->count();
 
-            $category_create =	BitCategory::create([
-                'category_name' => $input['category_name'] ,
-                'fare' => $input['fare'] ,
-                'utility' =>$input['utility']
-            ]);
+			if($category_count==0){
+				$category_create =	BitCategory::create([
+													'category_name' => $input['category_name'] ,
+													'fare' => $input['fare'] ,
+													'utility' =>$input['utility']
+												]);
 
-            $response = [
-                'title' => "Thanks",
-                'message' => "Bit Category Created Successfully",
-                'status' =>'success'
-            ];
-    
-            return response($response, 201);
+				$response = [
+					'title' => "Thanks",
+					'message' => "Bit Category Created Successfully",
+					'status' =>'success'
+				];
+		
+				return response($response, 201);
+					
+			}else{
+				$response = [
+					'title' => "sorry",
+					'message' => "Bit Category Already Exist need Different Name",
+					'status' =>'failed'
+				];
+		
+				return response($response, 202);
+			}
+            
         }else{
             $response = [
                 'title' => "Sorry",
@@ -115,7 +130,6 @@ class Bitmanage extends Controller
 
             return BitCategory::where('id',$category_id)->get();
 
-			
         }
 
     }
@@ -128,32 +142,49 @@ class Bitmanage extends Controller
 
             $input = $request->all();
 
-            $owner_photo = "no Photo";
+            $bit_name =  $input['bit_name'];
+            
+           $bit_count  = Bit::where('bit_name',$bit_name)->count();
 
-              if(!empty($input['image'])){    
-                $owner_photo  = time().'-'.$request->image->getClientOriginalName(); 
-                $request->image->move(public_path('bit_images'),  $owner_photo );
-              }else{
-                    unset($input['image']);
-              }
+            if($bit_count >= 1){
+                $response = [
+                    'title' => "Sorry",
+                    'message' => "Bit Name Already Exist",
+                    'status' =>'failed'
+                ];
+            }else{
+                $owner_photo = "no Photo";
 
-            $bit_create =	Bit::create([
-                'bit_name' => $input['bit_name'] ,
-                'bit_category' => $input['bit_category'] ,
-                'bit_location' =>$input['bit_location'],
-                'bit_owner' => $input['bit_owner'],
-                'owner_photo' =>   $owner_photo,
-                'bit_contact_number' =>$input['bit_contact_number'],
-                'slug' => "0",
-            ]);
+                if(!empty($input['image'])){    
+                  $owner_photo  = time().'-'.$request->image->getClientOriginalName(); 
+                  $request->image->move(public_path('bit_images'),  $owner_photo );
+                }else{
+                      unset($input['image']);
+                }
+  
+              $bit_create =	Bit::create([
+                  'bit_name' => $input['bit_name'] ,
+                  'bit_category' => $input['bit_category'] ,
+                  'bit_location' =>$input['bit_location'],
+                  'bit_owner' => $input['bit_owner'],
+                  'owner_photo' =>   $owner_photo,
+                  'bit_contact_number' =>$input['bit_contact_number'],
+                  'slug' => "0",
+              ]);
+  
+              $response = [
+                  'title' => "Thanks",
+                  'message' => "Bit Created Successfully",
+                  'status' =>'success'
+              ];
 
-            $response = [
-                'title' => "Thanks",
-                'message' => "Bit Created Successfully",
-                'status' =>'success'
-            ];
-    
+
+            }
+
+          
             return response($response, 201);
+
+
         }else{
             $response = [
                 'title' => "Sorry",
@@ -164,6 +195,40 @@ class Bitmanage extends Controller
             return response($response, 501); 
         }
     
+    }
+
+
+    public function bit_exist(Request $request){
+        if ($request->method()=="POST")
+		{
+			$data = $request->input();
+			$bit_name = $data['bit_name'];
+
+            $bit_info = Bit::where('bit_name',$bit_name)->get();
+			
+			if($bit_info->count()==0){
+				 $response = [
+						'title' => "Sorry",
+						'bit_count' => 0,
+						'message' => "No Bit Found",
+						'status' =>'failed'
+					];
+			}else{
+				 $bit_category =  BitCategory::where('id', $bit_info[0]->bit_category)->get();
+				
+				 $response = [
+						'title' => "Thanks",
+						'bit_count' => $bit_info->count(),
+						'message' => "Bit Exist",
+						'bit_category' =>  $bit_category ,
+						'status' =>'success'
+					];;
+			}
+           
+    
+            return response($response, 201);
+
+        }
     }
 
     /**

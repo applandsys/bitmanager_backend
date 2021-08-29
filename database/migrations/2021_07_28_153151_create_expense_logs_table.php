@@ -17,6 +17,7 @@ class CreateExpenseLogsTable extends Migration
             $table->id();
             $table->integer('account_chart_id');
             $table->string('description');
+            $table->string('custom_date');
             $table->string('amount');
             $table->timestamps();
         });

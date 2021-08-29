@@ -46,8 +46,10 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::any('/bitSearch', [Bitmanage::class, 'bitSearch']);
     Route::post('/add_bit', [Bitmanage::class, 'create']);
     Route::post('/bit_detail', [Bitmanage::class, 'bit_detail']);
+    Route::post('/bit_exist', [Bitmanage::class, 'bit_exist']);
     Route::post('/bit_collection', [BitCollection::class, 'insert_collection']);
     Route::post('/bit_collection_list', [BitCollection::class, 'collection_list_lastdate']);
+    Route::post('/bit_collection_daterange', [BitCollection::class, 'bit_collection_daterange']);
     Route::post('/cooperative_add_book', [Cooperative::class, 'add_book']);
     Route::post('/cooperative_book_list', [Cooperative::class, 'book_list']);
     Route::post('/cooperative_book_detail', [Cooperative::class, 'book_detail']);
@@ -63,13 +65,16 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/update_user', [UserController::class, 'update_user']);
     Route::post('/add_transport', [TransportContoller::class, 'add_transport']);
     Route::post('/transport', [TransportContoller::class, 'transport']);
+    Route::post('/transport_detail_by_id', [TransportContoller::class, 'transport_detail_by_id']);
     Route::any('/transport_collection', [TransportContoller::class, 'addTransportCollection']);
     Route::any('/transport_collection_detail', [TransportContoller::class, 'transport_collection_detail']);
     Route::any('/TodayTransportCollection', [TransportContoller::class, 'TodayTransportCollection']);
+    Route::any('/transport_collection_daterange', [TransportContoller::class, 'transport_collection_daterange']);
     Route::any('/add_expense_chart', [ExpenseController::class, 'addExpenseChart']);
     Route::any('/expense_chart', [ExpenseController::class, 'expense_chart']);
     Route::any('/add_expense', [ExpenseController::class, 'add_expense']);
     Route::any('/expense_list', [ExpenseController::class, 'expense_list']);
+    Route::any('/expense_daterange', [ExpenseController::class, 'expense_daterange']);
     Route::any('/bank_list', [BankController::class, 'bank_list']);
     Route::any('/add_bank', [BankController::class, 'add_bank']);
     Route::any('/bank_deposit', [BankController::class, 'bank_deposit']);

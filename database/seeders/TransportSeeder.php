@@ -17,17 +17,21 @@ class TransportSeeder extends Seeder
         DB::table('transports')->insert([
 
             [
-                'name' => 'Pick Up'
+                'name' => 'Pick Up',
+				'rent' => '500'
             ],
             [
-                'name' => 'Cover Van'
+                'name' => 'Cover Van',
+				'rent' => '600'
     
             ],
             [
-                'name' => 'Auto Rikshaw'
+                'name' => 'Auto Rikshaw',
+				'rent' => '700'
             ],
             [
-                'name' => 'Man'
+                'name' => 'Man',
+				'rent' => '50'
             ]
 
         ]);
