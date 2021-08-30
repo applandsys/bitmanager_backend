@@ -21,6 +21,7 @@ class UserSeeder extends Seeder
             'name' => "Manager-1",
             'email' => 'bitmanager@gmail.com',
             'role' => 'admin',
+            'user_photo' => 'manager-1.jpg',
             'contact_number' => '01837664478',
             'password' => Hash::make('12345678'),
         ]);

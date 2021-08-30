@@ -10,36 +10,47 @@ use App\Models\CorporateLoan;
 
 class Cooperative extends Controller
 {
-    
+
     public function add_book(Request $request){
-        
+
         if ($request->method()=="POST")
         {
             $input = $request->all();
+            $book_number = $input['book_number'];
+            $number_exist = CooperativeBook::where('book_number',$book_number)->count();
 
-            $photo = "no Photo";
+            if($number_exist==0){
 
-              if(!empty($input['image'])){    
-                $photo  = time().'-'.$request->image->getClientOriginalName(); 
-                $request->image->move(public_path('cooperative_image'),  $photo );
-              }else{
+                $photo = "no Photo";
+
+                if(!empty($input['image'])){
+                    $photo  = time().'-'.$request->image->getClientOriginalName();
+                    $request->image->move(public_path('cooperative_image'),  $photo );
+                }else{
                     unset($input['image']);
-              }
+                }
 
-            $book_create =	CooperativeBook::create([
-                'book_number' => $input['book_number'] ,
-                'member_name' =>$input['member_name'],
-                'member_contact' => $input['member_contact'],
-                'nid' => $input['nid'],
-                'member_photo' =>  $photo
-            ]);
+                $book_create =	CooperativeBook::create([
+                    'book_number' => $book_number ,
+                    'member_name' =>$input['member_name'],
+                    'member_contact' => $input['member_contact'],
+                    'nid' => $input['nid'],
+                    'member_photo' =>  $photo
+                ]);
 
-            $response = [
-                'title' => "Thanks",
-                'message' => "Book Created Successfully",
-                'status' =>'success'
-            ];
-    
+                $response = [
+                    'title' => "Thanks",
+                    'message' => "Book Created Successfully",
+                    'status' =>'success'
+                ];
+            }else{
+                $response = [
+                    'title' => "Sorry",
+                    'message' => "Book Number Already Used",
+                    'status' =>'failed'
+                ];
+            }
+
             return response($response, 201);
         }else{
             $response = [
@@ -47,10 +58,10 @@ class Cooperative extends Controller
                 'message' => "You are not Allowed",
                 'status' =>'failed'
             ];
-    
-            return response($response, 501); 
-        } 
-        
+
+            return response($response, 501);
+        }
+
         return response($response, 201);
 
     }
@@ -60,10 +71,10 @@ class Cooperative extends Controller
         return CooperativeBook::all();
     }
 
-    
+
 // Book Search //
 public function cooperative_book_Search(Request $request){
-        
+
     if ($request->method()=="POST")
     {
         $data = $request->input();
@@ -71,13 +82,13 @@ public function cooperative_book_Search(Request $request){
 
         return CooperativeBook::where('book_number',$member_name)->orWhere('member_name',$member_name)->get();
 
-        
+
     }
 
 }
 
 public function book_detail(Request $request){
-        
+
     if ($request->method()=="POST")
     {
         $data = $request->input();
@@ -85,7 +96,7 @@ public function book_detail(Request $request){
 
         return CooperativeBook::where('id',$book_id)->get();
 
-        
+
     }
 
 }
@@ -98,19 +109,36 @@ public function book_detail(Request $request){
 		{
 			$data = $request->input();
 
-            $bit_collection =	CooperativeDeposit::create([
-                'user_id' => 1,
-                'book_number_id' =>  $data['book_number'],
-                'amount' =>  $data['amount'] 
-            ]);
-    
-    
-            $response = [
-                'title' => "Thanks",
-                'message' => "Deposited Successfully",
-                'status' =>'success'
-            ];
-    
+            $book_number = $data['book_number'];
+
+            $boo_number_exist = CooperativeBook::where('book_number',$book_number)->count();
+
+            if($boo_number_exist!=0){
+
+                CooperativeDeposit::create([
+                    'user_id' => 1,
+                    'book_number_id' =>  $data['book_number'],
+                    'amount' =>  $data['amount']
+                ]);
+
+
+                $response = [
+                    'title' => "Thanks",
+                    'message' => "Deposited Successfully",
+                    'status' =>'success'
+                ];
+
+            }else{
+
+                $response = [
+                    'title' => "Sorry",
+                    'message' => "This Book Not Exist",
+                    'status' =>'failed'
+                ];
+
+            }
+
+
 
         }else{
             $response = [
@@ -118,16 +146,16 @@ public function book_detail(Request $request){
                 'message' => "Unauthorized",
                 'status' =>'unsuccess'
             ];
-    
-        }    
 
-        
+        }
+
+
         return response($response, 201);
 
 
     }
 
-    
+
 
 
     public function withdraw(Request $request){
@@ -137,19 +165,31 @@ public function book_detail(Request $request){
 		{
 			$data = $request->input();
 
-            $bit_collection =	CooperativeWithdraw::create([
-                'user_id' => 1,
-                'book_number_id' =>  $data['book_number'],
-                'amount' =>  $data['amount'] 
-            ]);
-    
-    
-            $response = [
-                'title' => "Thanks",
-                'message' => "Withdraw Successfully",
-                'status' =>'success'
-            ];
-    
+            $book_number = $data['book_number'];
+
+            $book_number_exist = CooperativeBook::where('book_number',$book_number)->count();
+
+            if($book_number_exist!=0){
+                CooperativeWithdraw::create([
+                    'user_id' => 1,
+                    'book_number_id' =>  $data['book_number'],
+                    'amount' =>  $data['amount']
+                ]);
+
+                $response = [
+                    'title' => "Thanks",
+                    'message' => "Withdraw Successfully",
+                    'status' =>'success'
+                ];
+            }else{
+                $response = [
+                    'title' => "Sorry",
+                    'message' => "Book Not Exist",
+                    'status' =>'failed'
+                ];
+
+            }
+
 
         }else{
             $response = [
@@ -157,16 +197,16 @@ public function book_detail(Request $request){
                 'message' => "Unauthorized",
                 'status' =>'unsuccess'
             ];
-    
-        }    
 
-        
+        }
+
+
         return response($response, 201);
 
 
     }
 
-    
+
     public function loan(Request $request){
 
 
@@ -178,16 +218,16 @@ public function book_detail(Request $request){
                 'user_id' => 1,
                 'loan_id' => $data['loan_number'],
                 'name' =>  $data['name'],
-                'amount' =>  $data['amount'] 
+                'amount' =>  $data['amount']
             ]);
-    
-    
+
+
             $response = [
                 'title' => "Thanks",
                 'message' => "Loan Given Successfully",
                 'status' =>'success'
             ];
-    
+
 
         }else{
             $response = [
@@ -195,10 +235,10 @@ public function book_detail(Request $request){
                 'message' => "Unauthorized",
                 'status' =>'unsuccess'
             ];
-    
-        }    
 
-        
+        }
+
+
         return response($response, 201);
 
 
